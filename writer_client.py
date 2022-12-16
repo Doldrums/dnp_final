@@ -4,8 +4,8 @@ import zmq
 if len(sys.argv) != 3:
     raise Exception('wrong number of arguments')
 
-client_inputs_port = int(sys.argv[0])
-name = str(sys.argv[1])
+client_inputs_port = int(sys.argv[1])
+name = str(sys.argv[2])
 
 context = zmq.Context()
 

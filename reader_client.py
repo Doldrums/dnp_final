@@ -4,7 +4,7 @@ import zmq
 if len(sys.argv) != 2:
     raise Exception('wrong number of arguments')
 
-client_reader_port = int(sys.argv[0])
+client_reader_port = int(sys.argv[1])
 
 context = zmq.Context()
 

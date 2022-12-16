@@ -18,21 +18,12 @@ writer_client_socket.bind(f'tcp://*:{writer_client_port}')
 writer_client_socket.RCVTIMEO = 100
 
 reader_client_socket = context.socket(zmq.PUB)
-reader_client_socket.bind(f'tcp://*:{writer_client_port}')
+reader_client_socket.bind(f'tcp://*:{reader_client_port}')
 
 data = []
-
-# лол этот ваш zmq не тред сейф(?)
-# def send_summary():
-#     threading.Timer(INTERNAL_DURATION, send_summary).start()
-#     summary = f"""SUMMARY:
-#                   {data}"""
-#     reader_client_socket.send_string(summary)
-
 time_diff = time.time()
 
 try: 
-    #send_summary()
     while True:
         try:
             received_message = writer_client_socket.recv_string()
