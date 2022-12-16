@@ -36,7 +36,7 @@ try:
                 data[name] = data.get(name) + 1
             reader_client_socket.send_string(received_message)
         except zmq.Again:
-                continue 
+            pass 
         current = time.time()
         if current - time_diff  > INTERNAL_DURATION:
             summary = "SUMMARY:"
