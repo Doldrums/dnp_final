@@ -9,7 +9,7 @@ name = str(sys.argv[1])
 
 context = zmq.Context()
 
-client_inputs_socket = context.socket(zmq.REQ)
+client_inputs_socket = context.socket(zmq.PUB)
 client_inputs_socket.connect(f'tcp://localhost:{client_inputs_port}')
 
 try:

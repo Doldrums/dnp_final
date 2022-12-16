@@ -1,6 +1,8 @@
 import sys
 import zmq
 import threading
+import time
+
 
 
 if len(sys.argv) != 3:
@@ -13,21 +15,24 @@ context = zmq.Context()
 
 writer_client_socket = context.socket(zmq.REP)
 writer_client_socket.bind(f'tcp://*:{writer_client_port}')
-writer_client_socket.RCVTIMEO = 500
+writer_client_socket.RCVTIMEO = 100
 
 reader_client_socket = context.socket(zmq.PUB)
 reader_client_socket.bind(f'tcp://*:{writer_client_port}')
 
 data = []
 
-def send_summary():
-    threading.Timer(INTERNAL_DURATION, send_summary).start()
-    summary = f"""SUMMARY:
-                  {data}"""
-    reader_client_socket.send_string(summary)
+# лол этот ваш zmq не тред сейф(?)
+# def send_summary():
+#     threading.Timer(INTERNAL_DURATION, send_summary).start()
+#     summary = f"""SUMMARY:
+#                   {data}"""
+#     reader_client_socket.send_string(summary)
+
+time_diff = time.time()
 
 try: 
-    send_summary()
+    #send_summary()
     while True:
         try:
             received_message = writer_client_socket.recv_string()
@@ -40,6 +45,12 @@ try:
             reader_client_socket.send_string(received_message)
         except zmq.Again:
                 continue 
+        current = time.time()
+        if current - time_diff  > INTERNAL_DURATION:
+            summary = f"""SUMMARY:
+                  {data}"""
+            reader_client_socket.send_string(summary)
+            time_diff = current
 except KeyboardInterrupt:
     print('Shutting down...')
     sys.exit(0)
